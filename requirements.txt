@@ -4,4 +4,4 @@ seaborn
 matplotlib
 lifelines
 openpyxl
-streamlit-option-menu
+streamlit_option_menu
