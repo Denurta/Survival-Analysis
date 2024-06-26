@@ -5,3 +5,4 @@ matplotlib
 lifelines
 openpyxl
 streamlit_option_menu
+scipy
