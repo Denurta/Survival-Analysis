@@ -3,7 +3,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from lifelines import KaplanMeierFitter, CoxPHFitter
-from lifelines.statistics import logrank_test, proportional_hazard_test
+from lifelines.statistics import  proportional_hazard_test
+from scipy.integrate import trapz
 from streamlit_option_menu import option_menu
 
 # Function to upload file
