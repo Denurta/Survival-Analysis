@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from lifelines import KaplanMeierFitter, CoxPHFitter
-from lifelines.statistics import proportional_hazard_test
+from lifelines.statistics import logrank_test, proportional_hazard_test
 from streamlit_option_menu import option_menu
 
 # Function to upload file
@@ -78,6 +78,17 @@ def page_survival_analysis(data):
             kmf.plot_survival_function(ax=ax)
             st.pyplot(fig)
             
+            st.write("Log-Rank Test:")
+            group_col = st.selectbox("Column for Grouping (Optional)", [None] + list(data.columns), index=0, key="group_col")
+            if group_col and group_col != "None":
+                groups = data[group_col].unique()
+                if len(groups) == 2:
+                    ix = data[group_col] == groups[0]
+                    results = logrank_test(data[duration_col][ix], data[duration_col][~ix], event_observed_A=data[event_col][ix], event_observed_B=data[event_col][~ix])
+                    st.write(f"Log-Rank Test p-value: {results.p_value}")
+                    st.write("Test Statistic:")
+                    st.write(results.test_statistic)
+            
             st.write("Proportional Hazard Test:")
             cph = CoxPHFitter()
             data_cph = data[[duration_col, event_col] + predictor_cols].rename(columns={duration_col: 'duration', event_col: 'event'})
@@ -91,10 +102,6 @@ def page_survival_analysis(data):
             
         except Exception as e:
             st.error(f"Error: {str(e)}")
-
-# Function for assumption check
-def page_assumption_check(data):
-    st.write("Assumption check will be implemented here...")
 
 # Main function for sidebar navigation
 def main():
